@@ -1,0 +1,62 @@
+=================
+JIANU Maria 321CB
+Tema 1 PA
+=================
+
+Problema 1:
+
+	Am rezolvat problema folosind Greedy astfel:
+- Sortez vectorul (va fi sortat crescator, dar nu conteaza pentru rezolvare pentru ca mereu un
+jucator va alege elementul de pozitiile pare/impare in functie de care este: primul sau al doilea).
+- Jucatorii vor muta simultan. La fiecare tura si Tuzgu si Ritza vor alege cel mai mare numar din 
+vector si asa vom determina diferenta maxima.
+
+Initial, am crezut ca nu asta este regula pentru ca diferenta ar fi evident mai mare daca Ritza nu
+ar alege si ea mereu cel mai mare numar, dar asta nu se poate intampla pentru ca si ea vrea sa maxizeze
+diferenta dintre scorul ei si a lui Tuzgu.
+
+Complexitate: O(NlogN) [sortare] + O(N) [parcurgere vector pentru a afla suma]
+
+Problema 2:
+	
+	Am rezolvat problema folosind Programare Dinamica astfel:
+- sortez si inversez vectorul ca sa am numerele in ordine descrecatoare
+- folosesc o matrice (dp[N - k][k + 1]), unde dp[i][j] va insemna cel mai bun scort dupa i ture jucate
+cand au fost eliminate k numere, in care stochez rezultatele partiale dupa urmatoarele reguli:
+(rezultatul problemei se va afla pe pozitia dp[N - k - 1][k], iar in calculul rezultatelor partiale
+ne vom uita doar in sus sau in stanga in matrice)
+1. pe prima linie voi avea maximul din vector
+2. pe prima coloana voi avea diferentele de scor daca s-ar juca jocul de la problema 1, adica cel mai
+mare numar - urmatorul, apoi aceasta diferenta - urmatorul si tot asa.
+3. toate celelalte pozitii vor fi completate folosind regula:
+	Cea mai buna alegere in orice moment este fie a elimina numarul si atunci dp[i][j] va fi egal cu
+diferenta anterioara din stanga in matrice (dp[i][j-1]), fie a nu-l elimina, iar atunci dp[i][j] va fi 
+egal cu suma sau diferenta dintre diferenta anterioara aflata mai sus in matrice si numarul la care 
+suntem (dp[i-1][j] +/- list.get(i + j)).
+
+Complexitate:  O(NlogN) [sortare] + O(N) [inversare] + O((N - k) * k) [parcurgere si umplere matrice]
+
+Problema 3:
+
+	Am rezolvat problema folosind Programare Dinamica astfel:
+- folosesc o matrice (dp[N][N]), unde dp[i][j] contine valoarea maxima pe care Tuzgu o poate avea de la 
+mutarea i la mutarea j unde i e valoarea din stanga vectorului si j valoarea din dreapta. Matricea va fi
+umpluta pe diagonala (tot ce e deasupra diagonalei principala in matrice este 0, ne intereaza doar partea 
+de jos).
+- mai exact, regula pentru dp[i][j] o determin din formula:
+	dp[i][j] este maximul dintre elementul din vector de pe pozitia i adunat cu minimul dintre
+dp[i + 2][j] si dp[i + 1][j - 1] si elementul de pe pozitia j adunat cu minimul dintre dp[i + 1][j - 1] 
+si dp[i][j - 2].
+- formula de mai sus provine din alegerile pe care le fac cei doi jucatori, uitandu-se la valorile din
+vector aflate imediat dupa numarul pe care vor sa-l aleaga, pentru ca atunci cand unul din ei alege
+un numar, il "lasa descoperit" pe cel din stanga/dreapta lui pentru urmatorul jucator. Motiv pentru care
+poate sa nu fie atat de optim sa alegi un numar mare, daca dupa el urmeaza un numar si mai mare pe care 
+il va lua oponentul. 
+- in urma acestei completari, scorul maxim pe care poate sa il obtine Tuzgu este pe pozitia dp[0][N - 1].
+- la final, fac diferenta dintre scorul lui Tuzgu si al Ritzei ca sa determin diferenta maxima.
+
+Complexitate: O(N) [suma] + O(N) [umplerea matricii]
+
+Mentiuni:
+-> Pentru ideea de umplere a matricii de la Problema 3 am folosit urmatoarea sursa:
+https://www.geeksforgeeks.org/optimal-strategy-for-a-game-dp-31/
